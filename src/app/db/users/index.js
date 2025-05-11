@@ -6,8 +6,8 @@ async function getUsers() {
   try {
     const allUsers = await db.user.findMany();
     await db.$disconnect();
-    console.log(allNotes);
-    return allNotes;
+    console.log(allUsers);
+    return allUsers;
   } catch (err) {
     console.error(err);
     await db.$disconnect();
@@ -56,4 +56,5 @@ async function deleteUser(userToUpdate) {
   });
 }
 
+getUsers();
 //postNote(); -- for testing purposes
