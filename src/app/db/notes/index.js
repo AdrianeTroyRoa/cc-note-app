@@ -39,8 +39,12 @@ async function updateNote(noteToUpdate) {
       id: noteToUpdate.id,
     },
     data: {
-      title: noteToUpdate.title,
-      content: noteToUpdate.content,
+      title:
+        noteToUpdate.title ??
+        db.note.findUnique({ where: { id: noteToUpdate.id } }).title,
+      content:
+        noteToUpdate.content ??
+        db.note.findUnique({ where: { id: noteToUpdate.id } }).content,
     },
   });
 }
