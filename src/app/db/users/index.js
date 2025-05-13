@@ -2,7 +2,7 @@ const { PrismaClient } = require("../../../generated/prisma");
 
 const db = new PrismaClient();
 
-async function getUsers() {
+export async function getUsers() {
   try {
     const allUsers = await db.user.findMany();
     await db.$disconnect();
@@ -15,7 +15,7 @@ async function getUsers() {
   }
 }
 
-async function postUser(userInfo) {
+export async function postUser(userInfo) {
   try {
     await db.user.create({
       data: {
@@ -32,7 +32,7 @@ async function postUser(userInfo) {
   }
 }
 
-async function updateUser(userToUpdate) {
+export async function updateUser(userToUpdate) {
   await db.note.update({
     where: {
       id: userToUpdate.id,
@@ -48,7 +48,7 @@ async function updateUser(userToUpdate) {
   });
 }
 
-async function deleteUser(userToUpdate) {
+export async function deleteUser(userToUpdate) {
   await db.note.delete({
     where: {
       id: userToUpdate.id,
