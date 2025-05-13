@@ -15,6 +15,23 @@ export async function getUsers() {
   }
 }
 
+export async function getUser(userEmail) {
+  try {
+    const user = await db.user.findFirst({
+      where: {
+        email: userEmail,
+      },
+    });
+    await db.$disconnect();
+    await getUsers();
+    return user;
+  } catch (e) {
+    console.error(err);
+    await db.$disconnect();
+    return;
+  }
+}
+
 export async function postUser(userInfo) {
   try {
     await db.user.create({
