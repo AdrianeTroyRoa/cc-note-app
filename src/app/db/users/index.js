@@ -5,13 +5,11 @@ const db = new PrismaClient();
 export async function getUsers() {
   try {
     const allUsers = await db.user.findMany();
-    await db.$disconnect();
     console.log(allUsers);
     return allUsers;
   } catch (err) {
-    console.error(err);
-    await db.$disconnect();
-    return;
+    console.error("getUsers error:", err);
+    return [];
   }
 }
 
@@ -22,13 +20,10 @@ export async function getUser(userEmail) {
         email: userEmail,
       },
     });
-    await db.$disconnect();
-    await getUsers();
     return user;
-  } catch (e) {
-    console.error(err);
-    await db.$disconnect();
-    return;
+  } catch (err) {
+    console.error("getUser error:", err);
+    return null;
   }
 }
 
@@ -40,38 +35,47 @@ export async function postUser(userInfo) {
         name: userInfo.name,
       },
     });
-    await db.$disconnect();
-    await getUsers();
   } catch (err) {
-    console.error(err);
-    await db.$disconnect();
-    return;
+    console.error("postUser error:", err);
   }
 }
 
 export async function updateUser(userToUpdate) {
-  await db.note.update({
-    where: {
-      id: userToUpdate.id,
-    },
-    data: {
-      email:
-        userToUpdate.title ??
-        db.note.findUnique({ where: { id: userToUpdate.id } }).email,
-      name:
-        userToUpdate.title ??
-        db.note.findUnique({ where: { id: userToUpdate.id } }).name,
-    },
-  });
+  try {
+    const existingUser = await db.user.findUnique({
+      where: { id: userToUpdate.id },
+    });
+
+    if (!existingUser) {
+      console.warn("User not found");
+      return;
+    }
+
+    await db.user.update({
+      where: { id: userToUpdate.id },
+      data: {
+        email: userToUpdate.email ?? existingUser.email,
+        name: userToUpdate.name ?? existingUser.name,
+      },
+    });
+  } catch (err) {
+    console.error("updateUser error:", err);
+  }
 }
 
-export async function deleteUser(userToUpdate) {
-  await db.note.delete({
-    where: {
-      id: userToUpdate.id,
-    },
-  });
+export async function deleteUser(userToDelete) {
+  try {
+    await db.user.delete({
+      where: {
+        id: userToDelete.id,
+      },
+    });
+  } catch (err) {
+    console.error("deleteUser error:", err);
+  }
 }
 
-getUsers();
-//postNote(); -- for testing purposes
+// Disconnect Prisma on shutdown
+process.on("beforeExit", async () => {
+  await db.$disconnect();
+});

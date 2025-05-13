@@ -1,60 +1,75 @@
 const { PrismaClient } = require("../../../generated/prisma");
-
 const db = new PrismaClient();
 
-async function getNotes() {
+export async function getNotes() {
   try {
     const allNotes = await db.note.findMany();
-    await db.$disconnect();
     console.log(allNotes);
     return allNotes;
   } catch (err) {
-    console.error(err);
-    await db.$disconnect();
-    return;
+    console.error("getNotes error:", err);
+    return [];
   }
 }
 
-async function postNote() {
+export async function getNotesById(userId) {
+  try {
+    const allNotes = await db.note.findMany({
+      where: {
+        authorId: userId,
+      },
+    });
+    console.log(allNotes);
+    return allNotes;
+  } catch (err) {
+    console.error("getNotes error:", err);
+    return [];
+  }
+}
+
+export async function postNote(newNote) {
   try {
     await db.note.create({
       data: {
-        title: "Goodbye",
-        content: "this is a sentiment of goodbye...",
-        authorId: 1,
+        title: newNote.title,
+        content: newNote.content,
+        authorId: newNote.authorId,
       },
     });
-    await db.$disconnect();
-    await getNotes();
   } catch (err) {
-    console.error(err);
-    await db.$disconnect();
-    return;
+    console.error("postNote error:", err);
   }
 }
 
-async function updateNote(noteToUpdate) {
-  await db.note.update({
-    where: {
-      id: noteToUpdate.id,
-    },
-    data: {
-      title:
-        noteToUpdate.title ??
-        db.note.findUnique({ where: { id: noteToUpdate.id } }).title,
-      content:
-        noteToUpdate.content ??
-        db.note.findUnique({ where: { id: noteToUpdate.id } }).content,
-    },
-  });
+export async function updateTheNote(noteToUpdate) {
+  try {
+    await db.note.update({
+      where: {
+        id: noteToUpdate.id,
+      },
+      data: {
+        title: noteToUpdate.title,
+        content: noteToUpdate.content,
+      },
+    });
+  } catch (err) {
+    console.error("updateNote error:", err);
+  }
 }
 
-async function deleteNote(noteToDelete) {
-  await db.note.delete({
-    where: {
-      id: noteToDelete.id,
-    },
-  });
+export async function deleteTheNote(noteId) {
+  try {
+    await db.note.delete({
+      where: {
+        id: noteId,
+      },
+    });
+  } catch (err) {
+    console.error("deleteNote error:", err);
+  }
 }
 
-//postNote(); -- for testing purposes
+// Optionally: Disconnect on app shutdown only, if needed
+process.on("beforeExit", async () => {
+  await db.$disconnect();
+});
