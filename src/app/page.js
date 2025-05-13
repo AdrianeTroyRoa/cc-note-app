@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { logout } from "./logout/actions";
 
 export default function Home() {
   const [username, setUsername] = useState("Hector");
@@ -34,27 +35,20 @@ export default function Home() {
     }
   };
 
-  const logout = () => {
-    setUsername("");
-    setNotes([]);
-  };
-
   return (
     <div className="min-h-screen bg-white text-black p-6">
       <div className="max-w-xl mx-auto">
         {/* Header */}
         <div className="flex justify-between items-center mb-6">
-          <h1 className="text-2xl font-bold">
-            {username ? `Welcome, ${username}!` : "You are logged out."}
-          </h1>
-          {username && (
+          <h1 className="text-2xl font-bold">{`Welcome, ${username}!`}</h1>
+          <form action={logout}>
             <button
-              onClick={logout}
+              type="submit"
               className="text-sm px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600"
             >
               Logout
             </button>
-          )}
+          </form>
         </div>
 
         {/* Add Note Button */}
