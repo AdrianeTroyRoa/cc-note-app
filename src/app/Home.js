@@ -50,28 +50,25 @@ export default function Home({ username, userId, oldNotes }) {
           content,
           updatedAt: now,
         };
-        
+
         setNotes((prev) =>
-          prev.map((note) =>
-            note.id === currentNote.id ? updatedNote : note
-          )
+          prev.map((note) => (note.id === currentNote.id ? updatedNote : note)),
         );
-        
+
         // Fire-and-forget the DB update
-        updateNote({ 
-          ...noteData, 
+        updateNote({
+          ...noteData,
           id: currentNote.id,
-          updatedAt: now 
-        }).catch(error => {
+          updatedAt: now,
+        }).catch((error) => {
           console.error("Update failed:", error);
           // Rollback on error
           setNotes((prev) =>
             prev.map((note) =>
-              note.id === currentNote.id ? currentNote : note
-            )
+              note.id === currentNote.id ? currentNote : note,
+            ),
           );
         });
-
       } else {
         // Generate temporary ID for optimistic update
         const tempId = `temp-${crypto.randomUUID()}`;
@@ -95,17 +92,25 @@ export default function Home({ username, userId, oldNotes }) {
           .then((savedNote) => {
             setNotes((prev) =>
               prev.map((note) =>
-                note.id === tempId ? { ...savedNote, createdAt: now } : note
-              )
+                note.id === tempId
+                  ? {
+                      ...note, // keep local title, content, etc.
+                      ...savedNote, // apply server-confirmed fields (e.g., real id)
+                      isTemp: false, // mark as saved
+                    }
+                  : note,
+              ),
             );
           })
-          .catch(error => {
+          .catch((error) => {
             console.error("Creation failed:", error);
             // Mark as failed instead of removing
             setNotes((prev) =>
               prev.map((note) =>
-                note.id === tempId ? { ...note, error: true, isTemp: false } : note
-              )
+                note.id === tempId
+                  ? { ...note, error: true, isTemp: false }
+                  : note,
+              ),
             );
           });
       }
@@ -124,15 +129,15 @@ export default function Home({ username, userId, oldNotes }) {
 
     try {
       // Optimistically remove from local state
-      const deletedNote = notes.find(note => note.id === noteId);
+      const deletedNote = notes.find((note) => note.id === noteId);
       setNotes((prev) => prev.filter((note) => note.id !== noteId));
-      
+
       // Only call deleteNote if it's not a temp note
       if (!deletedNote?.isTemp) {
-        deleteNote(noteId).catch(error => {
+        deleteNote(noteId).catch((error) => {
           console.error("Deletion failed:", error);
           // Rollback if delete fails
-          setNotes(prev => [...prev, deletedNote]);
+          setNotes((prev) => [...prev, deletedNote]);
         });
       }
     } catch (error) {
@@ -164,13 +169,11 @@ export default function Home({ username, userId, oldNotes }) {
 
         <div className="space-y-4">
           {notes.map((note) => (
-            <div 
-              key={note.id} 
+            <div
+              key={note.id}
               className={`bg-gray-100 p-4 rounded shadow relative transition-all ${
                 note.error ? "border-2 border-red-500" : ""
-              } ${
-                note.isTemp ? "opacity-80" : ""
-              }`}
+              } ${note.isTemp ? "opacity-80" : ""}`}
             >
               {note.isTemp && (
                 <div className="absolute top-2 right-2 text-xs bg-yellow-500 text-white px-2 py-1 rounded">
@@ -187,19 +190,19 @@ export default function Home({ username, userId, oldNotes }) {
                   <h3 className="text-lg font-bold">{note.title}</h3>
                   <p className="text-gray-800">{note.content}</p>
                   <p className="text-sm text-gray-400 mt-2">
-                    {note.createdAt && `Created: ${new Date(note.createdAt).toLocaleString()}`}
-                    {note.updatedAt && note.updatedAt !== note.createdAt && (
-                      <span className="block">Updated: {new Date(note.updatedAt).toLocaleString()}</span>
-                    )}
+                    {note.createdAt &&
+                      `Created: ${new Date(note.createdAt).toLocaleString()}`}
                   </p>
                 </div>
                 <div className="flex space-x-2">
                   <button
-                    onClick={() => !note.isTemp && !note.error && openEditModal(note)}
+                    onClick={() =>
+                      !note.isTemp && !note.error && openEditModal(note)
+                    }
                     disabled={note.isTemp || note.error}
                     className={`px-2 py-1 text-white rounded text-sm ${
-                      note.isTemp || note.error 
-                        ? "bg-gray-400 cursor-not-allowed" 
+                      note.isTemp || note.error
+                        ? "bg-gray-400 cursor-not-allowed"
                         : "bg-yellow-500 hover:bg-yellow-600"
                     }`}
                   >
@@ -209,8 +212,8 @@ export default function Home({ username, userId, oldNotes }) {
                     onClick={() => !note.error && handleDelete(note.id)}
                     disabled={note.error}
                     className={`px-2 py-1 text-white rounded text-sm ${
-                      note.error 
-                        ? "bg-gray-400 cursor-not-allowed" 
+                      note.error
+                        ? "bg-gray-400 cursor-not-allowed"
                         : "bg-red-500 hover:bg-red-600"
                     }`}
                   >
@@ -273,8 +276,8 @@ export default function Home({ username, userId, oldNotes }) {
                       ? "Updating..."
                       : "Saving..."
                     : currentNote
-                    ? "Update"
-                    : "Save"}
+                      ? "Update"
+                      : "Save"}
                 </button>
               </div>
             </div>

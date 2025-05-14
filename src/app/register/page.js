@@ -7,21 +7,21 @@ export default function RegisterPage() {
     <form action={signup}>
       <div className="min-h-screen bg-gray-100 flex justify-center items-center p-6">
         <div className="bg-white p-8 rounded shadow-md w-full max-w-sm">
-          <h2 className="text-2xl font-bold text-center mb-4">Register</h2>
+          <h2 className="text-2xl font-bold text-center mb-4 text-gray-800">Register</h2>
 
           <div className="mb-4">
             <label
-              htmlFor="name"
+              htmlFor="username"
               className="block text-sm font-medium text-gray-700"
             >
-              Full Name
+              Username
             </label>
             <input
               type="text"
-              id="name"
+              id="username"
               name="name"
-              className="w-full px-4 py-2 mt-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="Your full name"
+              className="w-full px-4 py-2 mt-1 border border-gray-300 text-gray-800 placeholder-gray-500 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder="Your username"
               required
             />
           </div>
@@ -37,7 +37,7 @@ export default function RegisterPage() {
               type="email"
               id="email"
               name="email"
-              className="w-full px-4 py-2 mt-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-4 py-2 mt-1 border border-gray-300 text-gray-800 placeholder-gray-500 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               placeholder="Your email"
               required
             />
@@ -54,7 +54,7 @@ export default function RegisterPage() {
               type="password"
               id="password"
               name="password"
-              className="w-full px-4 py-2 mt-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-4 py-2 mt-1 border border-gray-300 text-gray-800 placeholder-gray-500 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               placeholder="Your password"
               required
             />
@@ -71,7 +71,7 @@ export default function RegisterPage() {
               type="password"
               id="confirmPassword"
               name="confirmPassword"
-              className="w-full px-4 py-2 mt-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-4 py-2 mt-1 border border-gray-300 text-gray-800 placeholder-gray-500 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               placeholder="Confirm your password"
               required
             />

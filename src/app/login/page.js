@@ -1,29 +1,20 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import { login } from "./actions";
 
 export default function LoginPage() {
-  const router = useRouter();
-
-  const handleLogin = () => {
-    // Handle login logic (e.g., call API, validate)
-    if (email && password) {
-      alert(`Logged in with email: ${email}`);
-      router.push("/"); // Redirect after successful login (example)
-    }
-  };
-
   return (
     <form>
       <div className="min-h-screen bg-gray-100 flex justify-center items-center p-6">
         <div className="bg-white p-8 rounded shadow-md w-full max-w-sm">
-          <h2 className="text-2xl font-bold text-center mb-4">Login</h2>
+          <h2 className="text-2xl font-bold text-center text-[#1a1a1a] mb-4">
+            Login
+          </h2>
 
           <div className="mb-4">
             <label
               htmlFor="email"
-              className="block text-sm font-medium text-gray-700"
+              className="block text-sm font-medium text-[#333333]"
             >
               Email
             </label>
@@ -31,7 +22,7 @@ export default function LoginPage() {
               type="email"
               id="email"
               name="email"
-              className="w-full px-4 py-2 mt-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-4 py-2 mt-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-[#1a1a1a]"
               placeholder="Your email"
             />
           </div>
@@ -39,7 +30,7 @@ export default function LoginPage() {
           <div className="mb-4">
             <label
               htmlFor="password"
-              className="block text-sm font-medium text-gray-700"
+              className="block text-sm font-medium text-[#333333]"
             >
               Password
             </label>
@@ -47,7 +38,7 @@ export default function LoginPage() {
               type="password"
               id="password"
               name="password"
-              className="w-full px-4 py-2 mt-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-4 py-2 mt-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-[#1a1a1a]"
               placeholder="Your password"
             />
           </div>
@@ -61,7 +52,7 @@ export default function LoginPage() {
             </button>
           </div>
 
-          <p className="text-center text-sm text-gray-500">
+          <p className="text-center text-sm text-[#666666]">
             Don&apos;t have an account?{" "}
             <a href="/register" className="text-blue-600 hover:underline">
               Register
