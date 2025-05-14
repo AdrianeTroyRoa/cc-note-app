@@ -57,7 +57,8 @@ export default async function Page() {
 
     return <Home {...clientSafeData} />;
   } catch (error) {
-    console.error("Unexpected page error:", error);
+    console.error("Unexpected page error:", error?.message);
+    console.error(error);
     return redirect("/error?code=server_error");
   }
 }
